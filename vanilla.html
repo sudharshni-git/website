@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strawberry </title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 50%, #e0f7fa 100%);
+            background-attachment: fixed; color: #2d3436; line-height: 1.6;
+        }
+        .video-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2; overflow: hidden; opacity: 0.25; filter: brightness(1.2);
+        }
+        .video-container video {
+            min-width: 100%; min-height: 100%; object-fit: cover;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+        
+        /* --- NAVIGATION --- */
+        .navbar {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 700px; padding: 10px 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; background: rgba(255,255,255,0.4); backdrop-filter: blur(20px);
+            border-radius: 100px; border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(74,20,140,0.08);
+        }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .navbar a { color: #4a148c; text-decoration: none; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s; cursor: pointer; }
+        #user-display { 
+            font-weight: 800; font-size: 0.75rem; color: #ff0080; 
+            border-left: 2px solid rgba(0,0,0,0.1); padding-left: 15px; 
+            cursor: pointer;
+        }
+
+        .section { padding: 100px 5% 60px; text-align: center; }
+        h1 { font-size: clamp(2.5rem, 8vw, 3.8rem); margin-bottom: 50px; font-weight: 800; color: #3f1dcb; }
+        .vanilla-text { font-family: 'Playfair Display', serif; font-style: italic; color: #4a148c; }
+        
+        /* --- CARDS --- */
+        .items { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 35px; max-width: 1300px; margin: 0 auto; }
+        .card {
+            background: rgba(255,255,255,0.6); backdrop-filter: blur(15px);
+            padding: 20px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.7);
+            transition: all 0.4s ease; opacity: 0; transform: translateY(40px); display: flex; flex-direction: column;
+        }
+        .card.active { opacity: 1; transform: translateY(0); }
+        .card img { width: 100%; height: 220px; object-fit: cover; border-radius: 30px; margin-bottom: 20px; }
+        .btn-container { display: flex; gap: 10px; flex-direction: column; margin-top: auto; }
+        .btn-float { padding: 16px; border-radius: 20px; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .btn-order { background: linear-gradient(45deg, #3f1dcb, #7b1fa2); color: #fff; }
+        .btn-cart { background: #fff; color: #3f1dcb; border: 2px solid rgba(63,29,203,0.2); }
+        .btn-cart.is-added { color: #27ae60; border-color: #27ae60; background: rgba(39,174,96,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="video-container">
+    <video autoplay muted loop playsinline><source src="s.mp4" type="video/mp4"></video>
+</div>
+
+<div class="navbar">
+    <div class="nav-links">
+        <a href="home.html">Home</a>
+       
+        <a onclick="checkCartAccess()">Cart</a>
+        <a onclick="checkCheckoutAccess()" style="color: #3f1dcb;">Checkout</a>
+    </div>
+    <span id="user-display" onclick="window.location.href='login.html'">GUEST</span>
+</div>
+<div class="section" id="icecream">
+    <h1><span class="vanilla-text">Vanilla</span> Drinks 🥤</h1>
+    <div class="items">
+        <div class="card"><img src="coffee.jpg"><h3>Dark whipped </h3><p>₹199</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Oreo Dark',199,'dark.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Oreo Dark',199,'dark.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="blueb.jpg"><h3>Blueberry tint</h3><p>₹199</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Chocolate Chip',199,'blueb.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Chocolate Chip',199,'blueb.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="pi.jpg"><h3>Pistah Syrup</h3><p>₹180</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Caramel Syrup',180,'pi.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Caramel Syrup',180,'pi.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="ml.jpg"><h3>Honey Drizzle</h3><p>₹150</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Honey Drizzle',150,'whiiped.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Honey Drizzle',150,'whiiped.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="kitkat.jpg"><h3>Kitkat treat</h3><p>₹199</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Jelly Cube',199,'bi.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Jelly Cube',199,'bi.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="or.jpg"><h3>Oreo Specials Vannila </h3><p>₹180</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Strawberry Crunch',180,'or.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Strawberry Crunch',180,'or.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="cre.jpg"><h3>Milk Cream</h3><p>₹180</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Rose Petal',180,'ml.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Rose Petal',180,'ml.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="hot.jpg"><h3>Dark Hot Choco Mix </h3><p>₹180</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Marshmallows',180,'hot.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Marshmallows',180,'hot.jpg',this)">Add to Cart</button></div></div>
+    </div>
+</div>
+
+<div class="section" id="drink">
+    <h1><span class="vanilla-text">Vanilla</span>Specials 🍦</h1>
+    <div class="items">
+        <div class="card"><img src="ore.jpg"><h3>Oreo Chocolate cream</h3><p>₹200</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Oreo Milkshake',200,'hoch.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Oreo Milkshake',200,'hoch.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="st.jpg"><h3>Choco Dip Sticks </h3><p>₹200</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Strawberry Milkshake',200,'whch.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Strawberry Milkshake',200,'whch.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="stch.jpg"><h3>Vanilla Strawberry Mixed</h3><p>₹250</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Blueberry Milkshake',250,'stch.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Blueberry Milkshake',250,'stch.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="mich.jpg"><h3>Mint Tinted</h3><p>₹250</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Mango Milkshake',250,'mich.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Mango Milkshake',250,'mich.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="salted.jpg"><h3>Vanilla Salted Drizzle</h3><p>₹200</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Hot Chocolate Milkshake',200,'st.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Hot Chocolate Milkshake',200,'st.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="nu.jpg"><h3> Vannila Nuts</h3><p>₹250</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Mint Milkshake',250,'nu.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Mint Milkshake',250,'nu.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="ro.jpg"><h3>Rose Hot Choco Chip</h3><p>₹290</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla Brewed Coffee Milkshake',290,'ro.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla Brewed Coffee Milkshake',290,'ro.jpg',this)">Add to Cart</button></div></div>
+        <div class="card"><img src="mango.jpg"><h3>Mango Vannila  </h3><p>₹270</p><div class="btn-container"><button class="btn-float btn-order" onclick="guardedOrder('Vanilla KitKat Milkshake',270,'ore.jpg')">Scoop Now</button><button class="btn-float btn-cart" onclick="toggleCart('Vanilla KitKat Milkshake',270,'ore.jpg',this)">Add to Cart</button></div></div>
+    </div>
+</div>
+
+<script>
+    function isLoggedIn() { return localStorage.getItem('isLoggedIn') === 'true'; }
+
+    // REDIRECTS to login if not logged in
+    function guardedOrder(name, price, img) {
+        const itemObj = { name, price, image: img, qty: 1 };
+        if (isLoggedIn()) {
+            localStorage.setItem('myCart', JSON.stringify([itemObj]));
+            window.location.href = "place.html";
+        } else {
+            // Save the intent so the user can be redirected back or item kept
+            localStorage.setItem('pendingItem', JSON.stringify(itemObj));
+            alert("Please login to place an order!");
+            window.location.href = "login.html";
+        }
+    }
+
+    function checkCartAccess() {
+        if (isLoggedIn()) {
+            window.location.href = "cart.html";
+        } else {
+            alert("Login required to view your cart!");
+            window.location.href = "login.html";
+        }
+    }
+
+    function checkCheckoutAccess() {
+        if (isLoggedIn()) {
+            window.location.href = "place.html";
+        } else {
+            alert("Login required to checkout!");
+            window.location.href = "login.html";
+        }
+    }
+
+    function toggleCart(name, price, img, btn) {
+        let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+        const idx = cart.findIndex(i => i.name === name);
+        if (idx > -1) {
+            cart.splice(idx, 1);
+            btn.innerText = "Add to Cart";
+            btn.classList.remove('is-added');
+        } else {
+            cart.push({ name, price, image: img, qty: 1 });
+            btn.innerText = "Added ✅";
+            btn.classList.add('is-added');
+        }
+        localStorage.setItem('myCart', JSON.stringify(cart));
+    }
+
+    window.onload = function() {
+        const name = localStorage.getItem('userName');
+        const userDisplay = document.getElementById('user-display');
+        
+        if (name && isLoggedIn()) {
+            userDisplay.innerText = `HI, ${name.toUpperCase()} 👋`;
+        } else {
+            userDisplay.innerText = "LOGIN / GUEST 👤";
+        }
+        
+        // Scroll Animation
+        const reveal = () => {
+            document.querySelectorAll('.card').forEach(card => {
+                if (card.getBoundingClientRect().top < window.innerHeight - 50) card.classList.add('active');
+            });
+        };
+        window.addEventListener('scroll', reveal);
+        reveal();
+        
+        // Sync Buttons
+        let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+        document.querySelectorAll('.btn-cart').forEach(btn => {
+            const itemName = btn.closest('.card').querySelector('h3').innerText;
+            if(cart.some(i => i.name === itemName)) {
+                btn.innerText = "Added ✅";
+                btn.classList.add('is-added');
+            }
+        });
+    };
+</script>
+
+</body>
+</html>
